@@ -1,0 +1,4 @@
+*/*.txt
+*/*.swp
+template.py
+run_all
