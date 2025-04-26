@@ -84,6 +84,29 @@ def fft(inp):
   return [i for _, i in sorted(done.items())]
 
 
+def fft2(inp):
+
+  size   = len(inp)
+  result = [0] * size
+
+  for i in range((size+1)//2):
+    prev_first = prev_second = total = 0
+    for j in range(size):
+      first  = 2 * i + j * (2 * i + 1)
+      if first >= size: break
+      second = min(first + j + 1, size)
+      if prev_second <= first:
+        total = sum(inp[first:second])
+      else:
+        total -= sum(inp[prev_first:first])
+        if second > prev_second:
+          total += sum(inp[prev_second:second])
+      prev_first, prev_second = first, second
+      result[j] += -total if i%2 else total
+
+  return [abs(i) % 10 for i in result]
+
+
 def part_1(data):
 
   for _ in range(100):
@@ -98,8 +121,7 @@ def part_2(data):
   data   = data * 10000
 
   for _ in range(100):
-    print(_)
-    data = fft(data)
+    data = fft2(data)
 
   return ''.join(map(str, data[offset:offset+8]))
 
